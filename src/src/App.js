@@ -1,34 +1,34 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-import ProfileCard from "./ProfileCard";
-
+import Axios from "axios";
 
 function App() {
+  const [posts, setPosts] = useState([]);
 
-  const [writers, setWriters]=useState([])
+  useEffect(() => {
+    (async () => {
+      let response = await Axios({
+        method: "GET",
+        url: "https://jsonplaceholder.typicode.com/posts",
+      });
 
-  useEffect(()=>{
-      const getWriters = async ()=>{
-      const response = await fetch('/writers.json')
-      const data = await response.json()
-      setWriters(data)
+      setPosts(response.data);
+    })();
+  });
 
-    }
-
-    getWriters()
-  }, [])
   return (
-    <div className="App">
-      <h1>Writer Profiles.</h1>
-      <div className="container">
-        {writers.map((writer) => (
-
-          <ProfileCard writer={writer} key={writer.id}/>
-
-        ))}
+    <div className="app">
+      <h1> Daily Posts </h1>
+      <div>
+        <div className="list">
+          {posts.map((post) => (
+            <div key={post.id} className="post">
+              <h3>{post.title}</h3>
+              <p>{post.body}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
-
   );
 }
 
