@@ -1,20 +1,29 @@
-import "./App.css";
-import ProfileCard from "./ProfileCard";
-import writers from "./writers";
+import useLocalStorage from "./hooks/useLocalStorage";
+import ProfileForm from "./component/ProfileForm";
+import ProfileCard from "./component/ProfileCard";
 
 function App() {
+  const [profiles, setProfiles] = useLocalStorage("profiles", []);
+
+  const updateProfiles = (profile) => {
+    let arr = profiles;
+    arr.push(profile);
+    setProfiles([...arr]);
+  };
+
   return (
-    <div className="App">
-      <h1>Writer Profiles.</h1>
-      <div className="container">
-        {writers.map((writer) => (
-
-          <ProfileCard writer={writer}/>
-
-        ))}
+    <div className="app">
+      <h1> Profile Maker </h1>
+      <div>
+        <ProfileForm submit={updateProfiles} />
+        <hr />
+        <div className="list">
+          {profiles.map((person, index) => (
+            <ProfileCard key={index} writer={person} />
+          ))}
+        </div>
       </div>
     </div>
-
   );
 }
 
